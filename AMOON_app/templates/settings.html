@@ -1,0 +1,456 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات</title>
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a2e !important;
+        }
+
+        .navbar-brand img {
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e9ecef;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        .home-btn {
+            color: #1a1a2e;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            width: 40px;
+            height: 40px;
+        }
+
+        .home-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #1a1a2e;
+        }
+
+        .settings-container {
+            padding: 100px 20px 40px;
+            margin-top: 0;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            border-color: #4CAF50;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        /* تأثير عند التمرير */
+        .navbar.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* تنسيقات للهواتف المحمولة */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 0;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .navbar-brand img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .user-info {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+            }
+
+            .user-name {
+                font-size: 0.9rem;
+            }
+
+            .home-btn, .logout-btn {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+                margin: 5px 0;
+            }
+
+            .settings-container {
+                padding: 80px 15px 30px;
+            }
+
+            .card {
+                margin: 0;
+            }
+
+            .card-header {
+                padding: 15px;
+            }
+
+            .card-header h3 {
+                font-size: 1.3rem;
+            }
+
+            .form-control {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .btn-success {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+        }
+
+        /* تنسيقات للشاشات الصغيرة جداً */
+        @media (max-width: 576px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .user-info {
+                flex-direction: row;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .user-name {
+                display: none !important;
+            }
+
+            .user-info img {
+                width: 35px;
+                height: 35px;
+                margin: 0;
+            }
+
+            .home-btn, .logout-btn {
+                padding: 5px 10px;
+                font-size: 0.8rem;
+            }
+
+            .settings-container {
+                padding: 70px 10px 20px;
+            }
+
+            .card-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .notification-btn {
+                margin-left: 10px;
+            }
+        }
+
+        .notification-btn {
+            position: relative;
+            margin-left: 20px;
+            color: #666;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .notification-btn:hover {
+            color: #2196F3;
+            transform: scale(1.1);
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 2px solid white;
+            padding: 0 4px;
+        }
+
+        .dropdown-menu {
+            min-width: 300px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .dropdown-header {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .dropdown-item small {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+                <span>AMOON</span>
+            </a>
+            
+            <div class="d-flex align-items-center">
+                <div class="user-info me-3">
+                    <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}" alt="User">
+                    <span class="user-name">{{ user.get_full_name }}</span>
+                </div>
+
+                <div class="position-relative">
+                    <a href="#" class="notification-btn" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">0</span>
+                    </a>
+                    
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notifications-list">
+                        <li class="dropdown-header">الإشعارات</li>
+                        <div id="notifications-container">
+                            <li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>
+                        </div>
+                    </ul>
+                </div>
+
+                <a href="{% url 'home' %}" class="home-btn">
+                    <i class="fas fa-home"></i>
+                </a>
+
+                <form action="{% url 'logout' %}" method="post" class="ms-3">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">تسجيل الخروج</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="container">
+            <div class="card">
+                <div class="card-header text-center">
+                        <h3>تعديل الإعدادات الشخصية</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'settings' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">الاسم الكامل</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.get_full_name }}" placeholder="أدخل اسمك الكامل">
+                            </div>
+                            <div class="mb-3">
+                                <label for="profile_image" class="form-label">الصورة الشخصية</label>
+                                <input type="file" class="form-control" id="profile_image" name="profile_image">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">كلمة المرور الجديدة</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="أدخل كلمة المرور الجديدة">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">تأكيد كلمة المرور</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="أدخل تأكيد كلمة المرور">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">حفظ التغييرات</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    });
+
+    function fetchNotifications() {
+        fetch("{% url 'get_notifications' %}")
+        .then(response => response.json())
+        .then(data => {
+            let container = document.getElementById("notifications-container");
+            let countBadge = document.getElementById("notification-count");
+
+            container.innerHTML = "";
+
+            if (data.notifications.length > 0) {
+                data.notifications.forEach(notification => {
+                    let listItem = document.createElement("li");
+                    listItem.classList.add("dropdown-item");
+                    listItem.innerHTML = `<strong>${notification.message}</strong><br><small class="text-muted">${notification.timestamp}</small>`;
+                    container.appendChild(listItem);
+                });
+                countBadge.innerText = data.count;
+                countBadge.style.display = "flex";
+            } else {
+                container.innerHTML = `<li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>`;
+                countBadge.style.display = "none";
+            }
+        });
+    }
+
+    function markAsRead() {
+        fetch("{% url 'mark_notifications_as_read' %}")
+        .then(() => {
+            document.getElementById("notification-count").style.display = "none";
+        });
+    }
+
+    // تشغيل جلب الإشعارات كل 5 ثوانٍ
+    setInterval(fetchNotifications, 5000);
+    document.getElementById("notificationsDropdown").addEventListener("click", markAsRead);
+    </script>
+</body>
+</html>

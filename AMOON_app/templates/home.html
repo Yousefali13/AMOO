@@ -1,0 +1,453 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم</title>
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- AdminLTE CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1030;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a2e !important;
+    }
+
+    .navbar-brand img {
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+      gap: 15px;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e9ecef;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #c82333;
+        transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+    }
+
+    .apps-container {
+      padding: 100px 20px 40px;
+      margin-top: 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 30px;
+      position: relative;
+      padding-right: 20px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 5px;
+      height: 30px;
+      background: #4caf50;
+      transform: translateY(-50%);
+      border-radius: 3px;
+    }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .app-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+      text-decoration: none;
+      color: #1a1a2e;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .app-card:hover::before {
+      transform: translateX(0);
+    }
+
+    .app-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      margin-bottom: 15px;
+      font-size: 24px;
+      color: white;
+    }
+
+    .app-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .app-description {
+      font-size: 0.9rem;
+      color: #6c757d;
+      line-height: 1.5;
+    }
+
+    /* ألوان التطبيقات */
+    .accounting { background: linear-gradient(135deg, #4CAF50, #2E7D32); }
+    .messages { background: linear-gradient(135deg, #2196F3, #1976D2); }
+    .inventory { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
+    .orders { background: linear-gradient(135deg, #FF9800, #F57C00); }
+    .tasks { background: linear-gradient(135deg, #E91E63, #C2185B); }
+    .suppliers { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+    .users { background: linear-gradient(135deg, #3F51B5, #303F9F); }
+    .settings { background: linear-gradient(135deg, #607D8B, #455A64); }
+    .cv { background: linear-gradient(135deg, #FF5722, #E64A19); }
+
+    /* تحسين التجاوب */
+    @media (max-width: 768px) {
+      .apps-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .app-card {
+        padding: 20px;
+      }
+
+      .app-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+
+    /* تأثير عند التمرير */
+    .navbar.scrolled {
+      padding: 10px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* تحسين زر الإشعارات */
+    .notification-btn {
+      position: relative;
+      margin-left: 20px;
+      color: #666;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+      justify-content: center;
+        width: 40px;
+        height: 40px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+    }
+
+    .notification-btn:hover {
+      color: #2196F3;
+      transform: scale(1.1);
+      background: rgba(33, 150, 243, 0.1);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #dc3545;
+      color: white;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border: 2px solid white;
+      padding: 0 4px;
+    }
+
+    /* تحسين القائمة المنسدلة للإشعارات */
+    .dropdown-menu {
+      min-width: 300px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 0;
+        margin-top: 10px;
+    }
+
+    .dropdown-header {
+      background: #f8f9fa;
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .dropdown-item {
+        padding: 12px 20px;
+      border-bottom: 1px solid #f5f5f5;
+        transition: all 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+      background: #f8f9fa;
+    }
+
+    .dropdown-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .dropdown-item small {
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
+        <span>AMOON</span>
+      </a>
+      
+      <div class="d-flex align-items-center">
+        <div class="user-info me-3">
+          <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}" alt="User">
+          <span class="user-name">{{ user.get_full_name }}</span>
+        </div>
+        
+        <div class="position-relative">
+          <a href="#" class="notification-btn" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notification-count">0</span>
+        </a>
+          
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notifications-list">
+            <li class="dropdown-header">الإشعارات</li>
+            <div id="notifications-container">
+                <li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>
+            </div>
+        </ul>
+        </div>
+
+        <form action="{% url 'logout' %}" method="post" class="ms-3">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">تسجيل الخروج</button>
+        </form>
+      </div>
+            </div>
+  </nav>
+
+  <div class="apps-container">
+    <div class="container">
+      <h2 class="section-title">التطبيقات الرئيسية</h2>
+      <div class="apps-grid">
+        <a href="{% url 'accounting_dashboard' %}" class="app-card">
+          <div class="app-icon accounting">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <h3 class="app-title">المحاسبة</h3>
+          <p class="app-description">إدارة الحسابات المالية والمعاملات المالية</p>
+        </a>
+
+        <a href="{% url 'messages_list' %}" class="app-card">
+          <div class="app-icon messages">
+                        <i class="fas fa-comments"></i>
+                    </div>
+          <h3 class="app-title">الرسائل</h3>
+          <p class="app-description">إدارة المراسلات والاتصالات الداخلية</p>
+                </a>
+
+        <a href="{% url 'dashboard_view1' %}" class="app-card">
+          <div class="app-icon inventory">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+          <h3 class="app-title">المخزون</h3>
+          <p class="app-description">إدارة المخزون وتتبع المنتجات</p>
+                </a>
+
+        <a href="{% url 'purchase_order_list' %}" class="app-card">
+          <div class="app-icon orders">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+          <h3 class="app-title">طلبات الشراء</h3>
+          <p class="app-description">إدارة طلبات الشراء والمشتريات</p>
+        </a>
+
+        <a href="{% url 'cv_dashboard' %}" class="app-card">
+          <div class="app-icon cv">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h3 class="app-title">السيرة الذاتية</h3>
+          <p class="app-description">إدارة السير الذاتية </p>
+        </a>
+      </div>
+
+      <h2 class="section-title">إدارة الأعمال</h2>
+      <div class="apps-grid">
+        <a href="{% url 'order_list' %}" class="app-card">
+          <div class="app-icon tasks">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+          <h3 class="app-title">الطلبات</h3>
+          <p class="app-description">إدارة الطلبات والمبيعات</p>
+                </a>
+
+        <a href="{% url 'supplier_list' %}" class="app-card">
+          <div class="app-icon suppliers">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+          <h3 class="app-title">إدارة الموردين</h3>
+          <p class="app-description">إدارة معلومات الموردين والشركاء</p>
+                </a>
+
+        <a href="{% url 'user_list' %}" class="app-card">
+          <div class="app-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+          <h3 class="app-title">إدارة المستخدمين</h3>
+          <p class="app-description">إدارة حسابات المستخدمين والصلاحيات</p>
+                </a>
+
+        <a href="{% url 'settings' %}" class="app-card">
+          <div class="app-icon settings">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+          <h3 class="app-title">الإعدادات</h3>
+          <p class="app-description">إعدادات النظام والتكوينات</p>
+                </a>
+            </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+        }
+      });
+    });
+
+  function fetchNotifications() {
+    fetch("{% url 'get_notifications' %}")
+      .then(response => response.json())
+      .then(data => {
+          let container = document.getElementById("notifications-container");
+          let countBadge = document.getElementById("notification-count");
+
+        container.innerHTML = "";
+
+          if (data.notifications.length > 0) {
+              data.notifications.forEach(notification => {
+                  let listItem = document.createElement("li");
+                  listItem.classList.add("dropdown-item");
+                  listItem.innerHTML = `<strong>${notification.message}</strong><br><small class="text-muted">${notification.timestamp}</small>`;
+                  container.appendChild(listItem);
+              });
+            countBadge.innerText = data.count;
+            countBadge.style.display = "flex";
+          } else {
+              container.innerHTML = `<li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>`;
+            countBadge.style.display = "none";
+          }
+      });
+  }
+
+  function markAsRead() {
+    fetch("{% url 'mark_notifications_as_read' %}")
+      .then(() => {
+        document.getElementById("notification-count").style.display = "none";
+      });
+  }
+
+  // تشغيل جلب الإشعارات كل 5 ثوانٍ
+  setInterval(fetchNotifications, 5000);
+  document.getElementById("notificationsDropdown").addEventListener("click", markAsRead);
+</script>
+</body>
+</html>

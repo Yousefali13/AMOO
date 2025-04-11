@@ -1,0 +1,922 @@
+{% load static %} 
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>الملف الشخصي</title>
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- AdminLTE CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 10px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1030;
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: #666;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      color: #4CAF50;
+      transform: translateX(3px);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .brand-logo i {
+      font-size: 1.4rem;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-info img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-name {
+      color: #333;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .notification-btn {
+      position: relative;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0 5px;
+      cursor: pointer;
+      color: #666;
+      font-size: 1.2rem;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #dc3545;
+      color: white;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    .notification-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 15px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .notification-menu.active {
+      display: block;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notification-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .mark-all-read {
+      background: none;
+      border: none;
+      color: #4CAF50;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .notification-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .notification-item {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .notification-item:hover {
+      background: #f0f0f0;
+    }
+
+    .notification-item.unread {
+      background: #e3f2fd;
+    }
+
+    .notification-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      font-size: 1rem;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-text {
+      font-size: 0.9rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .notification-time {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .notification-footer {
+      text-align: center;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+      margin-top: 10px;
+    }
+
+    .view-all-notifications {
+      color: #4CAF50;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .home-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0 5px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 15px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #c82333;
+    }
+
+    .apps-container {
+      padding: 100px 20px 40px;
+      margin-top: 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 30px;
+      position: relative;
+      padding-right: 20px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 5px;
+      height: 30px;
+      background: #4caf50;
+      transform: translateY(-50%);
+      border-radius: 3px;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #3F51B5;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .profile-job {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .profile-email, .profile-joined {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .btn-action {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-message {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-message:hover {
+      background: #43A047;
+    }
+
+    .btn-home {
+      background: #3F51B5;
+      color: white;
+    }
+
+    .btn-home:hover {
+      background: #303F9F;
+    }
+
+    .apps-menu {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      width: 380px;
+      padding: 25px;
+      z-index: 1039;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .apps-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .apps-menu-header {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .apps-grid-menu {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .app-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      padding: 20px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .app-item:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .app-item i {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .app-item:hover i {
+      transform: scale(1.1);
+    }
+
+    .app-item span {
+      font-size: 1rem;
+      color: #333;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    /* ألوان الأيقونات */
+    .accounting { color: #4CAF50; }
+    .messages { color: #2196F3; }
+    .inventory { color: #9C27B0; }
+    .orders { color: #FF9800; }
+    .tasks { color: #E91E63; }
+    .suppliers { color: #00BCD4; }
+    .users { color: #3F51B5; }
+    .settings { color: #607D8B; }
+    .cv { color: #FF5722; }
+
+    @media (max-width: 768px) {
+      .navbar .container {
+        padding: 0 15px;
+      }
+
+      .brand-logo span {
+        font-size: 1rem;
+      }
+
+      .user-name {
+        font-size: 0.85rem;
+      }
+
+      .user-info img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .logout-btn {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
+
+      .apps-container {
+        padding: 80px 15px 30px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .profile-card {
+        padding: 20px;
+      }
+
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+      }
+
+      .profile-name {
+        font-size: 1.3rem;
+      }
+
+      .profile-job {
+        font-size: 1rem;
+      }
+
+      .profile-email, .profile-joined {
+        font-size: 0.9rem;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn-action {
+        width: 100%;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+      }
+
+      .notification-menu {
+        position: fixed;
+        top: 60px;
+        right: 15px;
+        left: 15px;
+        width: auto;
+      }
+
+      .apps-menu {
+        width: calc(100% - 40px);
+        right: 20px;
+        bottom: 90px;
+      }
+
+      .apps-grid-menu {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .app-item {
+        padding: 15px;
+      }
+
+      .app-item i {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+      }
+
+      .profile-name {
+        font-size: 1.2rem;
+      }
+
+      .profile-job {
+        font-size: 0.9rem;
+      }
+
+      .profile-email, .profile-joined {
+        font-size: 0.85rem;
+      }
+
+      .btn-action {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+      }
+
+      .apps-grid-menu {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .app-item {
+        padding: 12px;
+      }
+
+      .app-item i {
+        font-size: 1.8rem;
+      }
+
+      .app-item span {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* إضافة تنسيقات زر القائمة */
+    .apps-menu-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4CAF50, #43A047);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 1040;
+      transition: all 0.3s ease;
+    }
+
+    .apps-menu-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #43A047, #388E3C);
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="brand-section">
+        <a href="{% url 'user_list' %}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <a href="{% url 'home' %}" class="brand-logo">
+          <i class="fas fa-user-shield"></i>
+          <span>AMOON</span>
+        </a>
+        <!-- <a href="{% url 'user_list' %}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+        </a> -->
+      </div>
+
+      <div class="user-section">
+        <div class="user-info">
+          <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}" alt="User">
+          <span class="user-name">{{ user.get_full_name }}</span>
+        </div>
+
+        <div class="notification-container">
+          <button class="notification-btn" id="notificationBtn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">0</span>
+          </button>
+          <div class="notification-menu" id="notificationMenu">
+            <div class="notification-header">
+              <h3 class="notification-title">الإشعارات</h3>
+              <button class="mark-all-read" id="markAllRead">تعليم الكل كمقروء</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <!-- سيتم تحميل الإشعارات ديناميكياً -->
+            </div>
+            <div class="notification-footer">
+              <a href="{% url 'notifications' %}" class="view-all-notifications">عرض جميع الإشعارات</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="{% url 'home' %}" class="home-btn">
+          <i class="fas fa-home"></i>
+        </a>
+
+        <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">تسجيل الخروج</button>
+        </form>
+      </div>
+                </div>
+  </nav>
+
+  <div class="apps-container">
+    <div class="container">
+      <h2 class="section-title">الملف الشخصي</h2>
+      <div class="profile-card">
+        <img class="profile-avatar" 
+             src="{% if employee.profile_image %}{{ employee.profile_image.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}" 
+             alt="User Avatar">
+        <h3 class="profile-name">{{ employee.get_full_name }}</h3>
+        <p class="profile-job">
+          <i class="fas fa-briefcase"></i>
+          {{ employee.job_title }}
+        </p>
+        <p class="profile-email">
+          <i class="fas fa-envelope"></i>
+          {{ employee.email }}
+        </p>
+        <p class="profile-joined">
+          <i class="fas fa-calendar-alt"></i>
+          انضم في: {{ employee.date_joined|date:"Y-m-d" }}
+        </p>
+        <div class="profile-actions">
+          {% if employee.id %}
+          <a href="{% url 'chat_view' user_id=employee.id %}" class="btn-action btn-message">
+            <i class="fas fa-comment"></i>
+            إرسال رسالة
+          </a>
+          {% endif %}
+          <a href="{% url 'home' %}" class="btn-action btn-home">
+            <i class="fas fa-home"></i>
+            العودة إلى الرئيسية
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- زر القائمة -->
+  <button class="apps-menu-btn" id="appsMenuBtn">
+    <i class="fas fa-th"></i>
+  </button>
+
+  <!-- قائمة التطبيقات -->
+  <div class="apps-menu" id="appsMenu">
+    <div class="apps-menu-header">التطبيقات</div>
+    <div class="apps-grid-menu">
+      <a href="{% url 'accounting_dashboard' %}" class="app-item">
+        <i class="fas fa-calculator accounting"></i>
+        <span>المحاسبة</span>
+      </a>
+      <a href="{% url 'messages_list' %}" class="app-item">
+        <i class="fas fa-comments messages"></i>
+        <span>الرسائل</span>
+      </a>
+      <a href="{% url 'dashboard_view1' %}" class="app-item">
+        <i class="fas fa-boxes inventory"></i>
+        <span>المخزون</span>
+      </a>
+      <a href="{% url 'purchase_order_list' %}" class="app-item">
+        <i class="fas fa-shopping-cart orders"></i>
+        <span>طلبات الشراء</span>
+      </a>
+      <a href="{% url 'cv_dashboard' %}" class="app-item">
+        <i class="fas fa-file-alt cv"></i>
+        <span>السيرة الذاتية</span>
+      </a>
+      <a href="{% url 'order_list' %}" class="app-item">
+        <i class="fas fa-clipboard-list tasks"></i>
+        <span>الطلبات</span>
+      </a>
+      <a href="{% url 'supplier_list' %}" class="app-item">
+        <i class="fas fa-users-cog suppliers"></i>
+        <span>الموردين</span>
+      </a>
+      <a href="{% url 'user_list' %}" class="app-item">
+        <i class="fas fa-users users"></i>
+        <span>المستخدمين</span>
+      </a>
+      <a href="{% url 'settings' %}" class="app-item">
+        <i class="fas fa-cogs settings"></i>
+        <span>الإعدادات</span>
+                              </a>
+                          </div>
+                        </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const navbar = document.querySelector('.navbar');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationMenu = document.getElementById('notificationMenu');
+    const notificationList = document.getElementById('notificationList');
+    const markAllReadBtn = document.getElementById('markAllRead');
+    
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // تحديث الإشعارات كل 30 ثانية
+    function updateNotifications() {
+      fetch('/api/notifications/')
+        .then(response => response.json())
+        .then(data => {
+          notificationList.innerHTML = '';
+          let unreadCount = 0;
+
+          data.notifications.forEach(notification => {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = `notification-item ${notification.is_read ? '' : 'unread'}`;
+            notificationItem.innerHTML = `
+              <div class="d-flex align-items-center">
+                <div class="notification-icon" style="background: ${notification.icon_bg}; color: ${notification.icon_color};">
+                  <i class="fas ${notification.icon}"></i>
+                    </div>
+                <div class="notification-content">
+                  <p class="notification-text">${notification.message}</p>
+                  <span class="notification-time">${notification.time}</span>
+                </div>
+            </div>
+            `;
+
+            if (!notification.is_read) {
+              unreadCount++;
+            }
+
+            notificationItem.addEventListener('click', () => {
+              markNotificationAsRead(notification.id);
+              window.location.href = notification.link;
+            });
+
+            notificationList.appendChild(notificationItem);
+          });
+
+          updateBadge(unreadCount);
+        })
+        .catch(error => console.error('Error fetching notifications:', error));
+    }
+
+    // تعليم الإشعار كمقروء
+    function markNotificationAsRead(notificationId) {
+      fetch(`/api/notifications/${notificationId}/mark_read/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateNotifications();
+        }
+      })
+      .catch(error => console.error('Error marking notification as read:', error));
+    }
+
+    // تعليم جميع الإشعارات كمقروءة
+    function markAllNotificationsAsRead() {
+      fetch('/api/notifications/mark_all_read/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateNotifications();
+        }
+      })
+      .catch(error => console.error('Error marking all notifications as read:', error));
+    }
+
+    // تحديث شارة الإشعارات
+    function updateBadge(count) {
+      const badge = document.querySelector('.notification-badge');
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    // الحصول على قيمة CSRF Token
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // إضافة مستمعي الأحداث
+    notificationBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      notificationMenu.classList.toggle('active');
+      if (notificationMenu.classList.contains('active')) {
+        updateNotifications();
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!notificationMenu.contains(e.target) && !notificationBtn.contains(e.target)) {
+        notificationMenu.classList.remove('active');
+      }
+    });
+
+    markAllReadBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      markAllNotificationsAsRead();
+    });
+
+    // تحديث الإشعارات كل 30 ثانية
+    setInterval(updateNotifications, 30000);
+
+    // تحديث الإشعارات عند تحميل الصفحة
+    updateNotifications();
+
+    // التحكم في ظهور وإخفاء القائمة
+    const appsMenuBtn = document.getElementById('appsMenuBtn');
+    const appsMenu = document.getElementById('appsMenu');
+    
+    appsMenuBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      appsMenu.classList.toggle('show');
+    });
+
+    // إخفاء القائمة عند النقر خارجها
+    document.addEventListener('click', function(e) {
+      if (!appsMenu.contains(e.target) && !appsMenuBtn.contains(e.target)) {
+        appsMenu.classList.remove('show');
+      }
+    });
+
+    // منع إغلاق القائمة عند النقر عليها
+    appsMenu.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  });
+  </script>
+</body>
+</html>

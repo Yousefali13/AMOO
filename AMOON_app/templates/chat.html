@@ -1,0 +1,223 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام المحادثات</title>
+    <!-- التضمينات الأساسية -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/adminlte.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #075e54;
+            --secondary-color: #128c7e;
+        }
+        
+        .chat-container {
+            height: 100vh;
+            border-radius: 0;
+        }
+        
+        .conversation-list {
+            width: 350px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+        
+        .active-conversation {
+            background-color: rgba(7, 94, 84, 0.1) !important;
+            border-left: 4px solid var(--primary-color) !important;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px;
+            border-radius: 15px;
+            margin: 8px 0;
+            position: relative;
+        }
+        
+        .sent {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .received {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: #666;
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+        }
+    </style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    
+    <!-- الشريط الجانبي -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <img src="{% static 'images/logo.png' %}" class="img-circle elevation-2" alt="Logo">
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block">أمون للخدمات</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row full-height">
+                    
+                    <!-- قائمة المحادثات -->
+                    <div class="col-md-4 conversation-list bg-light p-0">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-comments"></i> المحادثات</h5>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            {% for conv in conversations %}
+                            <a href="{% url 'chat_view' conv.user.id %}" 
+                               class="list-group-item list-group-item-action {% if conv.user.id == receiver.id %}active-conversation{% endif %}">
+                                <div class="d-flex align-items-center">
+                                    <img src="{% if conv.user.profile_image %}{{ conv.user.profile_image.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+                                         class="rounded-circle me-3" width="45" height="45">
+                                    <div>
+                                        <h6 class="mb-0">{{ conv.user.get_full_name }}</h6>
+                                        <small class="text-muted">{{ conv.last_message|truncatechars:20 }}</small>
+                                    </div>
+                                </div>
+                            </a>
+                            {% empty %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-comment-slash fa-2x text-muted"></i>
+                                <p class="mt-2">لا توجد محادثات</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- نافذة المحادثة -->
+                    <div class="col-md-8 p-0">
+                        <div class="card chat-container">
+                            <!-- رأس المحادثة -->
+                            <div class="card-header bg-primary text-white d-flex align-items-center">
+                                <img src="{% if receiver.profile_image %}{{ receiver.profile_image.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+                                     class="rounded-circle me-3" width="40" height="40">
+                                <div>
+                                    <h5 class="mb-0">{{ receiver.get_full_name }}</h5>
+                                    <small class="status-indicator">
+                                        {% if receiver.is_online %}
+                                        <span class="text-success">● متصل الآن</span>
+                                        {% else %}
+                                        <span class="text-muted">⌛ آخر نشاط {{ receiver.last_login|timesince }}</span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- منطقة الرسائل -->
+                            <div class="card-body chat-messages p-3" style="height: calc(100vh - 150px); overflow-y: auto;">
+                                {% for message in messages %}
+                                <div class="message-bubble {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                                    <div class="message-content">{{ message.content }}</div>
+                                    <span class="message-time">
+                                        {{ message.timestamp|date:"H:i" }}
+                                        {% if message.sender == request.user %}
+                                        <i class="fas fa-check{% if message.is_read %}-double text-info{% endif %} ms-2"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% empty %}
+                                <div class="text-center text-muted py-5">
+                                    <i class="fas fa-comment-dots fa-3x"></i>
+                                    <p class="mt-3">ابدأ محادثة جديدة</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- نموذج إرسال الرسائل -->
+                            <div class="card-footer bg-white">
+                                <form method="POST" class="d-flex align-items-center" id="message-form">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               name="content" 
+                                               class="form-control border-0" 
+                                               placeholder="اكتب رسالتك هنا..." 
+                                               required
+                                               aria-label="رسالة">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- السكريبتات -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(document).ready(function(){
+    // التمرير التلقائي للأسفل
+    function scrollToBottom() {
+        const $messages = $('.chat-messages');
+        $messages.scrollTop($messages[0].scrollHeight);
+    }
+    scrollToBottom();
+
+    // إرسال الرسائل عبر AJAX
+    $('#message-form').on('submit', function(e){
+        e.preventDefault();
+        const $form = $(this);
+        const $input = $form.find('input[name="content"]');
+        
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: $form.serialize(),
+            success: function(response){
+                $input.val('');
+                scrollToBottom();
+            },
+            error: function(xhr){
+                console.error('خطأ في الإرسال:', xhr.responseText);
+            }
+        });
+    });
+
+    // تحديث تلقائي كل 5 ثواني
+    setInterval(function(){
+        $.get(window.location.href, function(data){
+            const $newMessages = $(data).find('.chat-messages').html();
+            $('.chat-messages').html($newMessages);
+            scrollToBottom();
+        });
+    }, 5000);
+});
+</script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,915 @@
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرسائل</title>
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 8px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            height: auto;
+        }
+
+        .navbar .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a2e !important;
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+        }
+
+        .navbar-brand img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 15px;
+        }
+
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1rem;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            padding: 0 4px;
+        }
+
+        .home-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1rem;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            height: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-menu {
+            min-width: 280px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 0;
+            margin-top: 8px;
+        }
+
+        .dropdown-header {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f5f5f5;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item strong {
+            display: block;
+            margin-bottom: 3px;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item small {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* تأثير عند التمرير */
+        .navbar.scrolled {
+            padding: 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* تنسيقات للهواتف المحمولة */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 45px;
+            }
+
+            .navbar-brand img {
+                width: 25px;
+                height: 25px;
+            }
+
+            .user-info img,
+            .notification-btn,
+            .home-btn {
+                width: 28px;
+                height: 28px;
+            }
+
+            .logout-btn {
+                padding: 3px 10px;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .user-name {
+                display: none !important;
+            }
+
+            .user-info {
+                margin: 0 8px;
+            }
+
+            .notification-btn,
+            .home-btn {
+                margin: 0 8px;
+            }
+
+            .logout-btn {
+                padding: 5px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* تنسيقات قائمة المحادثات */
+        .container {
+            margin-top: 80px;
+            max-width: 800px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: #1a1a2e;
+            margin-bottom: 25px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title i {
+            color: #4CAF50;
+        }
+
+        .list-group {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .chat-item {
+            padding: 20px;
+            border-radius: 0;
+            margin-bottom: 0;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chat-item:last-child {
+            border-bottom: none;
+        }
+
+        .chat-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+            box-shadow: none;
+        }
+
+        .chat-avatar {
+            width: 55px;
+            height: 55px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .chat-item:hover .chat-avatar {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+        }
+
+        .chat-details {
+            flex: 1;
+        }
+
+        .chat-details strong {
+            font-size: 1.1rem;
+            color: #1a1a2e;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .chat-details p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .chat-details small {
+            font-size: 0.8rem;
+            color: #999;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .no-messages i {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* تنسيقات للشاشات الصغيرة */
+        @media (max-width: 576px) {
+            .container {
+                margin-top: 70px;
+                padding: 0 15px;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .chat-item {
+                padding: 15px;
+            }
+
+            .chat-avatar {
+                width: 45px;
+                height: 45px;
+            }
+
+            .chat-details strong {
+                font-size: 1rem;
+            }
+
+            .chat-details p {
+                font-size: 0.85rem;
+            }
+
+            .chat-details small {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* تنسيقات زر إنشاء محادثة جديدة */
+        .new-chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 1000;
+        }
+
+        .new-chat-btn i {
+            font-size: 1.5rem;
+        }
+
+        .new-chat-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            color: white;
+        }
+
+        @media (max-width: 576px) {
+            .new-chat-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+
+            .new-chat-btn i {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* تنسيقات Modal */
+        .modal-content {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 20px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .search-box .input-group {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .search-box .form-control {
+            border: 1px solid #f0f0f0;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+
+        .search-box .input-group-text {
+            background: white;
+            border: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        .users-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .user-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .user-item img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 12px;
+            object-fit: cover;
+            border: 2px solid #e9ecef;
+        }
+
+        .user-item .user-info {
+            flex: 1;
+        }
+
+        .user-item .user-info h6 {
+            margin: 0 0 3px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .user-item .user-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* تنسيق scrollbar */
+        .users-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .users-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .users-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .users-list::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* تنسيقات نافذة المحادثة */
+        .chat-messages {
+            background: #f8f9fa;
+            padding: 15px;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .message-bubble.sent {
+            background: #075e54;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-bubble.received {
+            background: #e9ecef;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+        }
+
+        .message-bubble.received .message-time {
+            color: #666;
+        }
+
+        .chat-input {
+            background: white;
+        }
+
+        .chat-input .form-control {
+            border: none;
+            border-radius: 20px;
+            background: #f0f2f5;
+            padding: 10px 15px;
+        }
+
+        .chat-input .btn-primary {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-dialog.modal-lg {
+            max-width: 600px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #075e54;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .modal-title img {
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+                <span>AMOON</span>
+            </a>
+            
+            <div class="d-flex align-items-center">
+                <div class="user-info">
+                    <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}" alt="User">
+                    <span class="user-name">{{ user.get_full_name }}</span>
+                </div>
+
+                <div class="position-relative">
+                    <button class="notification-btn" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">0</span>
+                    </button>
+                    
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" id="notifications-list">
+                        <li class="dropdown-header">الإشعارات</li>
+                        <div id="notifications-container">
+                            <li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>
+                        </div>
+                    </ul>
+                </div>
+
+                <a href="{% url 'home' %}" class="home-btn">
+                    <i class="fas fa-home"></i>
+                </a>
+
+                <form action="{% url 'logout' %}" method="post" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">تسجيل الخروج</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3 class="page-title">
+            <i class="fas fa-comments"></i>
+            الرسائل
+        </h3>
+    <div class="list-group">
+        {% for conversation in conversations %}
+        <a href="{% url 'chat_view' conversation.user.id %}" class="list-group-item list-group-item-action d-flex align-items-center chat-item">
+            <div class="flex-shrink-0">
+                <img src="{% if conversation.user.profile_image %}{{ conversation.user.profile_image.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+                     class="rounded-circle chat-avatar" 
+                     alt="{{ conversation.user.get_full_name }}">
+            </div>
+            <div class="ms-3 chat-details">
+                <strong>{{ conversation.user.get_full_name }}</strong>
+                    <p>{{ conversation.last_message|truncatechars:30 }}</p>
+                    <small>{{ conversation.last_message_time|date:"H:i - d/m/Y" }}</small>
+            </div>
+        </a>
+        {% empty %}
+            <div class="no-messages">
+                <i class="fas fa-comment-slash"></i>
+                لا توجد محادثات بعد
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+    <!-- زر إنشاء محادثة جديدة -->
+    <button type="button" class="new-chat-btn" data-bs-toggle="modal" data-bs-target="#newChatModal">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <!-- Modal للمستخدمين -->
+    <div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newChatModalLabel">بدء محادثة جديدة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="search-box mb-3">
+                        <div class="input-group">
+                            <input type="text" id="userSearch" class="form-control" placeholder="البحث عن مستخدم...">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="users-list">
+                        <!-- سيتم تحميل المستخدمين هنا -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal للمحادثة -->
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">
+                        <img src="" class="rounded-circle me-2" width="40" height="40" id="chatUserImage">
+                        <span id="chatUserName"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="chat-messages" style="height: 400px; overflow-y: auto; padding: 15px;">
+                        <!-- الرسائل ستظهر هنا -->
+                    </div>
+                    <div class="chat-input p-3 border-top">
+                        <form id="messageForm" class="d-flex">
+                            {% csrf_token %}
+                            <input type="text" class="form-control me-2" id="messageInput" placeholder="اكتب رسالتك هنا...">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    });
+
+    function fetchNotifications() {
+        fetch("{% url 'get_notifications' %}")
+        .then(response => response.json())
+        .then(data => {
+            let container = document.getElementById("notifications-container");
+            let countBadge = document.getElementById("notification-count");
+
+            container.innerHTML = "";
+
+            if (data.notifications.length > 0) {
+                data.notifications.forEach(notification => {
+                    let listItem = document.createElement("li");
+                    listItem.classList.add("dropdown-item");
+                    listItem.innerHTML = `<strong>${notification.message}</strong><br><small class="text-muted">${notification.timestamp}</small>`;
+                    container.appendChild(listItem);
+                });
+                countBadge.innerText = data.count;
+                countBadge.style.display = "flex";
+            } else {
+                container.innerHTML = `<li class="dropdown-item text-center">لا توجد إشعارات جديدة</li>`;
+                countBadge.style.display = "none";
+            }
+        });
+    }
+
+    function markAsRead() {
+        fetch("{% url 'mark_notifications_as_read' %}")
+        .then(() => {
+            document.getElementById("notification-count").style.display = "none";
+        });
+    }
+
+    // تشغيل جلب الإشعارات كل 5 ثوانٍ
+    setInterval(fetchNotifications, 5000);
+    document.getElementById("notificationsDropdown").addEventListener("click", markAsRead);
+
+    // تعديل وظيفة تحميل المستخدمين
+    function loadUsers() {
+        fetch("{% url 'get_company_users' %}")
+        .then(response => response.json())
+        .then(data => {
+            const usersList = document.querySelector('.users-list');
+            usersList.innerHTML = '';
+
+            data.users.forEach(user => {
+                const userItem = document.createElement('a');
+                userItem.href = '#';
+                userItem.className = 'user-item';
+                userItem.setAttribute('data-user-id', user.id);
+                userItem.setAttribute('data-user-name', user.full_name);
+                userItem.setAttribute('data-user-image', user.profile_image || '{% static "images/default_profile.png" %}');
+                userItem.innerHTML = `
+                    <img src="${user.profile_image || '{% static "images/default_profile.png" %}'}" alt="${user.full_name}">
+                    <div class="user-info">
+                        <h6>${user.full_name}</h6>
+                        <p>${user.department || ''}</p>
+                    </div>
+                `;
+                userItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openChat(user.id, user.full_name, user.profile_image || '{% static "images/default_profile.png" %}');
+                });
+                usersList.appendChild(userItem);
+            });
+        });
+    }
+
+    // وظيفة إرسال الرسائل
+    function sendMessage(userId) {
+        const messageInput = document.getElementById('messageInput');
+        const content = messageInput.value.trim();
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        if (content) {
+            $.ajax({
+                url: `/messages/send/${userId}/`,
+                type: 'POST',
+                data: {
+                    content: content,
+                    csrfmiddlewaretoken: csrfToken
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        messageInput.value = '';
+                        loadMessages(userId);
+                    } else {
+                        console.error('Error sending message:', response);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+
+    // تعديل وظيفة فتح المحادثة
+    function openChat(userId, userName, userImage) {
+        const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+        document.getElementById('chatUserName').textContent = userName;
+        document.getElementById('chatUserImage').src = userImage;
+        
+        // تحميل الرسائل
+        loadMessages(userId);
+        
+        // إعداد نموذج إرسال الرسائل
+        const messageForm = document.getElementById('messageForm');
+        messageForm.onsubmit = function(e) {
+            e.preventDefault();
+            sendMessage(userId);
+        };
+        
+        chatModal.show();
+    }
+
+    // تعديل وظيفة تحميل الرسائل
+    function loadMessages(userId) {
+        $.ajax({
+            url: `/messages/get/${userId}/`,
+            type: 'GET',
+            success: function(data) {
+                const messagesContainer = document.querySelector('.chat-messages');
+                messagesContainer.innerHTML = '';
+                
+                data.messages.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message-bubble ${message.is_sender ? 'sent' : 'received'}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-content">${message.content}</div>
+                        <span class="message-time">${message.timestamp}</span>
+                    `;
+                    messagesContainer.appendChild(messageDiv);
+                });
+                
+                // التمرير للأسفل
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading messages:', error);
+            }
+        });
+    }
+
+    // تحديث الرسائل كل 5 ثواني
+    setInterval(function() {
+        const chatModal = document.getElementById('chatModal');
+        if (chatModal.classList.contains('show')) {
+            const userId = document.querySelector('.user-item.active')?.getAttribute('data-user-id');
+            if (userId) {
+                loadMessages(userId);
+            }
+        }
+    }, 5000);
+
+    // تعديل روابط المحادثات في القائمة
+    document.querySelectorAll('.chat-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const userId = this.getAttribute('href').split('/').pop();
+            const userName = this.querySelector('strong').textContent;
+            const userImage = this.querySelector('img').src;
+            openChat(userId, userName, userImage);
+        });
+    });
+    </script>
+</body>
+</html>
+{% endblock %}
